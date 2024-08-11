@@ -15,7 +15,10 @@ interface ToneDatabase {
 }
 
 // State
-const audioPlayer = ref<HTMLAudioElement | null>(null)
+const audioContext = ref<AudioContext | null>(null)
+const audioBuffer = ref<AudioBuffer | null>(null)
+const audioSource = ref<AudioBufferSourceNode | null>(null)
+
 const gameStage = ref<0 | 1 | 2>(0)
 const numExercises = ref(10)
 const tones = ref<boolean[][]>([[true, true, true, true], [true, true, true, true]])
@@ -76,35 +79,41 @@ function copyURL() {
 /**
  * Plays the audio for the current question.
  */
-function playAudio() {
+async function playAudio() {
   const cur = quizTones.value[curQuestion.value]
-  if (!audioPlayer.value) {
-    audioPlayer.value = new Audio()
+  
+  if (!audioContext.value) {
+    audioContext.value = new (window.AudioContext || (window as any).webkitAudioContext)()
   }
-  
-  audioPlayer.value.src = `static/${cur}.m4a`
-  audioPlayer.value.load()
-  
-  audioPlayer.value.oncanplaythrough = () => {
-    const playPromise = audioPlayer.value?.play()
-    if (playPromise !== undefined) {
-      playPromise.catch((error) => {
-        console.error('Audio playback failed:', error)
-      })
+
+  try {
+    const response = await fetch(`static/${cur}.m4a`)
+    const arrayBuffer = await response.arrayBuffer()
+    audioBuffer.value = await audioContext.value.decodeAudioData(arrayBuffer)
+
+    if (audioSource.value) {
+      audioSource.value.stop()
     }
-  }
-  
-  audioPlayer.value.onerror = (e) => {
-    console.error('Audio loading error:', e)
+
+    audioSource.value = audioContext.value.createBufferSource()
+    audioSource.value.buffer = audioBuffer.value
+    audioSource.value.connect(audioContext.value.destination)
+    audioSource.value.start()
+  } catch (error) {
+    console.error('Error playing audio:', error)
   }
 }
 
 function cleanupAudio() {
-  if (audioPlayer.value) {
-    audioPlayer.value.pause()
-    audioPlayer.value.src = ''
-    audioPlayer.value = null
+  if (audioSource.value) {
+    audioSource.value.stop()
   }
+  if (audioContext.value) {
+    audioContext.value.close()
+  }
+  audioContext.value = null
+  audioBuffer.value = null
+  audioSource.value = null
 }
 
 /**
@@ -235,7 +244,7 @@ function startQuiz() {
 // Lifecycle hooks
 onMounted(() => {
   filterDatabase()
-  audioPlayer.value = new Audio()
+  audioContext.value = new (window.AudioContext || (window as any).webkitAudioContext)()
 })
 
 onUnmounted(() => {
