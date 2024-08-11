@@ -77,7 +77,7 @@ function copyURL() {
  */
 function playAudio() {
   const cur = quizTones.value[curQuestion.value]
-  new Audio(`static/modelnew/${cur}.wav`).play()
+  new Audio(`static/${cur}.m4a`).play()
 }
 
 /**
