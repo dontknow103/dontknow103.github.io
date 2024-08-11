@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import DATABASE from './database.json'
 
 // Types
@@ -15,6 +15,7 @@ interface ToneDatabase {
 }
 
 // State
+const audioPlayer = ref<HTMLAudioElement | null>(null)
 const gameStage = ref<0 | 1 | 2>(0)
 const numExercises = ref(10)
 const tones = ref<boolean[][]>([[true, true, true, true], [true, true, true, true]])
@@ -77,7 +78,33 @@ function copyURL() {
  */
 function playAudio() {
   const cur = quizTones.value[curQuestion.value]
-  new Audio(`static/${cur}.m4a`).play()
+  if (!audioPlayer.value) {
+    audioPlayer.value = new Audio()
+  }
+  
+  audioPlayer.value.src = `static/${cur}.m4a`
+  audioPlayer.value.load()
+  
+  audioPlayer.value.oncanplaythrough = () => {
+    const playPromise = audioPlayer.value?.play()
+    if (playPromise !== undefined) {
+      playPromise.catch((error) => {
+        console.error('Audio playback failed:', error)
+      })
+    }
+  }
+  
+  audioPlayer.value.onerror = (e) => {
+    console.error('Audio loading error:', e)
+  }
+}
+
+function cleanupAudio() {
+  if (audioPlayer.value) {
+    audioPlayer.value.pause()
+    audioPlayer.value.src = ''
+    audioPlayer.value = null
+  }
 }
 
 /**
@@ -206,7 +233,14 @@ function startQuiz() {
 }
 
 // Lifecycle hooks
-onMounted(filterDatabase)
+onMounted(() => {
+  filterDatabase()
+  audioPlayer.value = new Audio()
+})
+
+onUnmounted(() => {
+  cleanupAudio()
+})
 </script>
 
 <template>
