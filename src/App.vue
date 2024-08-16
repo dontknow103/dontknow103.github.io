@@ -236,8 +236,7 @@ const initializeOrtSession = async () => {
   if (ortSession.value)
     return;
   try {
-    env.wasm.wasmPaths = 'https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/';
-    //env.wasm.wasmPaths = `${window.location.origin}/assets/`;
+    env.wasm.wasmPaths = `${window.location.origin}/assets/`;
     env.wasm.proxy = true;
     const modelPath = `${window.location.origin}/assets/${models[chosenModel.value]['fileName']}`;
     ortSession.value = await InferenceSession.create(modelPath);
