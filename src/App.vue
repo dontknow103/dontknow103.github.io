@@ -2,8 +2,8 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import * as ort from 'onnxruntime-web'
 
-//ort.env.wasm.wasmPaths = "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/dist/"
-ort.env.wasm.wasmPaths = `${window.location.origin}/`;
+ort.env.wasm.wasmPaths = "https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/dist/"
+//ort.env.wasm.wasmPaths = `${window.location.origin}/`;
 ort.env.wasm.proxy = true
 
 // Data
