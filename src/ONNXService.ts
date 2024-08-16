@@ -54,6 +54,13 @@ export class ONNXService {
       };
     });
   }
+  terminateWorker() {
+    if (this.worker) {
+      this.worker.terminate();
+      this.worker = null;
+      this.modelLoaded = false;
+    }
+  }
 
   private handleWorkerMessages(e: MessageEvent) {
     const { type, status, error } = e.data;

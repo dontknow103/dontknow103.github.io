@@ -247,8 +247,13 @@ const setNextQuestion = async () => {
 }
 
 
-const initializeOrtSession = async () => {
-  if (!onnxService) {
+const initializeOrtSession = async (forceReinitialize = false) => {
+  if (!onnxService || forceReinitialize) {
+    // If forceReinitialize is true, terminate the existing worker before creating a new one
+    if (onnxService && forceReinitialize) {
+      onnxService.terminateWorker();
+    }
+
     onnxService = new ONNXService(models[chosenModel.value].fileName);
     await onnxService.initializeSession();
   }
@@ -270,7 +275,7 @@ const startQuiz = async () => {
   loadingGame.value = true
 
   try {
-    await initializeOrtSession();
+    await initializeOrtSession(true);
   } catch (error) {
     modelLoadingText.value = 'Failed to initialize ONNX session';
     return;
