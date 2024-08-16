@@ -240,7 +240,8 @@ const initializeOrtSession = async () => {
     ort.env.wasm.wasmPaths = `${window.location.origin}/`;
     ort.env.wasm.proxy = true;
     console.log(ort.env);
-    ortSession.value = await ort.InferenceSession.create(models[chosenModel.value]['fileName']);
+    const modelPath = `${window.location.origin}/${models[chosenModel.value]['fileName']}`;
+    ortSession.value = await ort.InferenceSession.create(modelPath);
     console.log("InferenceSession created successfully");
   } catch (error) {
     console.error(error);
