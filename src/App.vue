@@ -236,13 +236,10 @@ const initializeOrtSession = async () => {
   if (ortSession.value)
     return;
   try {
-    console.log("Starting ONNX initialization...");
-    ort.env.wasm.wasmPaths = `${window.location.origin}/`;
+    ort.env.wasm.wasmPaths = `${window.location.origin}/assets/`;
     ort.env.wasm.proxy = true;
-    console.log(ort.env);
-    const modelPath = `${window.location.origin}/${models[chosenModel.value]['fileName']}`;
+    const modelPath = `${window.location.origin}/assets/${models[chosenModel.value]['fileName']}`;
     ortSession.value = await ort.InferenceSession.create(modelPath);
-    console.log("InferenceSession created successfully");
   } catch (error) {
     console.error(error);
     throw error;
