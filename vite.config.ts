@@ -7,15 +7,21 @@ import { viteStaticCopy } from "vite-plugin-static-copy";
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    vue(),
-    viteStaticCopy({
-      targets: [
-        {
-          src: "node_modules/onnxruntime-web/dist/*.wasm",
-          dest: "/",
-        },
-      ],
-    }),
+    [
+      vue(),
+      viteStaticCopy({
+        targets: [
+          {
+            src: "node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded.wasm",
+            dest: "/",
+          },
+          {
+            src: "node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded.mjs",
+            dest: "/",
+          },
+        ],
+      }),
+    ],
   ],
   resolve: {
     alias: {

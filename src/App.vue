@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { ONNXService } from '@/ONNXService'; // Import the class as usual
-import type { InferenceFeeds } from '@/ONNXService'; // Use 'import type' for the type-only import
+import { ONNXService } from '@/ONNXService';
+import type { InferenceFeeds } from '@/ONNXService';
 
 let onnxService: ONNXService | null = null;
 
