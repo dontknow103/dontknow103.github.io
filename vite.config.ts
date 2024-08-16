@@ -13,11 +13,11 @@ export default defineConfig({
         targets: [
           {
             src: "node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded.wasm",
-            dest: "/",
+            dest: "",
           },
           {
             src: "node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded.mjs",
-            dest: "/",
+            dest: "",
           },
         ],
       }),
