@@ -233,6 +233,8 @@ const setNextQuestion = async () => {
 }
 
 const initializeOrtSession = async () => {
+  if (ortSession.value)
+    return;
   try {
     console.log("Starting ONNX initialization...");
     ort.env.wasm.wasmPaths = `${window.location.origin}/`;
