@@ -7,8 +7,16 @@ export interface InferenceFeeds {
 export class ONNXService {
   private worker: Worker | null = null;
   private modelLoaded: boolean = false;
+  private _modelFileName: string;
 
-  constructor(private modelFileName: string) {}
+  constructor(modelFileName: string) {
+    this._modelFileName = modelFileName;
+  }
+
+  // Getter for modelFileName
+  get modelFileName(): string {
+    return this._modelFileName;
+  }
 
   async initializeSession(): Promise<void> {
     if (this.worker) return; // Avoid re-initializing if the worker already exists
@@ -16,7 +24,7 @@ export class ONNXService {
     this.worker = new Worker("/onnx-worker.js");
     this.worker.onmessage = this.handleWorkerMessages.bind(this);
 
-    const modelPath = `${window.location.origin}/${this.modelFileName}`;
+    const modelPath = `${window.location.origin}/${this._modelFileName}`;
 
     return new Promise<void>((resolve, reject) => {
       this.worker!.postMessage({ type: "loadModel", modelPath });

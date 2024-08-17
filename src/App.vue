@@ -246,19 +246,6 @@ const setNextQuestion = async () => {
   }
 }
 
-
-const initializeOrtSession = async (forceReinitialize = false) => {
-  if (!onnxService || forceReinitialize) {
-    // If forceReinitialize is true, terminate the existing worker before creating a new one
-    if (onnxService && forceReinitialize) {
-      onnxService.terminateWorker();
-    }
-
-    onnxService = new ONNXService(models[chosenModel.value].fileName);
-    await onnxService.initializeSession();
-  }
-};
-
 const predictAudio = async (tokens: number[], tones: number[]): Promise<Float32Array> => {
   if (!onnxService) throw new Error('ONNX service is not initialized');
 
@@ -274,11 +261,16 @@ const predictAudio = async (tokens: number[], tones: number[]): Promise<Float32A
 const startQuiz = async () => {
   loadingGame.value = true
 
-  try {
-    await initializeOrtSession(true);
-  } catch (error) {
-    modelLoadingText.value = 'Failed to initialize ONNX session';
-    return;
+  if ((onnxService === null) || onnxService.modelFileName !== models[chosenModel.value].fileName) {
+    try {
+      if (onnxService !== null)
+        onnxService.terminateWorker();
+      onnxService = new ONNXService(models[chosenModel.value].fileName);
+      await onnxService.initializeSession();
+    } catch (error) {
+      modelLoadingText.value = 'Failed to initialize ONNX session';
+      return;
+    }
   }
 
   resetQuiz()
