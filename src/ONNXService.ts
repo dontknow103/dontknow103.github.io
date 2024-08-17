@@ -8,6 +8,12 @@ export class ONNXService {
   private worker: Worker | null = null;
   private modelLoaded: boolean = false;
   private _modelFileName: string;
+  private requestQueue: {
+    feeds: InferenceFeeds;
+    resolve: (result: Float32Array) => void;
+    reject: (error: Error) => void;
+  }[] = [];
+  private processingRequest: boolean = false;
 
   constructor(modelFileName: string) {
     this._modelFileName = modelFileName;
@@ -46,22 +52,36 @@ export class ONNXService {
   async runInference(feeds: InferenceFeeds): Promise<Float32Array> {
     if (!this.worker) throw new Error("Worker is not initialized");
 
-    this.worker.postMessage({ type: "run", feeds });
-
     return new Promise<Float32Array>((resolve, reject) => {
-      this.worker!.onmessage = (e: MessageEvent) => {
-        const { type, status, error, result } = e.data;
-
-        if (type === "run") {
-          if (status === "success") {
-            resolve(result as Float32Array);
-          } else {
-            reject(new Error(error));
-          }
-        }
-      };
+      this.requestQueue.push({ feeds, resolve, reject });
+      this.processNextRequest();
     });
   }
+
+  private processNextRequest() {
+    if (this.processingRequest || this.requestQueue.length === 0) return;
+
+    this.processingRequest = true;
+    const { feeds, resolve, reject } = this.requestQueue.shift()!;
+
+    this.worker!.postMessage({ type: "run", feeds });
+
+    this.worker!.onmessage = (e: MessageEvent) => {
+      const { type, status, error, result } = e.data;
+
+      if (type === "run") {
+        if (status === "success") {
+          resolve(result as Float32Array);
+        } else {
+          reject(new Error(error));
+        }
+
+        this.processingRequest = false;
+        this.processNextRequest();
+      }
+    };
+  }
+
   terminateWorker() {
     if (this.worker) {
       this.worker.terminate();
