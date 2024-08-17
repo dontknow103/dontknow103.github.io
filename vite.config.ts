@@ -19,6 +19,10 @@ export default defineConfig({
             src: "node_modules/onnxruntime-web/dist/ort-wasm-simd-threaded.mjs",
             dest: "",
           },
+          {
+            src: "node_modules/onnxruntime-web/dist/ort.min.js",
+            dest: "",
+          },
         ],
       }),
     ],
