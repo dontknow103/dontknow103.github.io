@@ -23,6 +23,10 @@ export default defineConfig({
             src: "node_modules/onnxruntime-web/dist/ort.min.js",
             dest: "",
           },
+          {
+            src: "node_modules/onnxruntime-web/dist/ort.min.js.map",
+            dest: "",
+          },
         ],
       }),
     ],
