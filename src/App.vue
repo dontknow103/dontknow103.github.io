@@ -372,27 +372,49 @@ onUnmounted(cleanupAudio)
         </div>
       </div>
 
-      <!-- Active Game -->
       <div v-else-if="gameStage === GameStages.STARTED">
 
-        <div class="d-flex justify-content-center gap-2 mb-4">
-          <button type="button" class="btn btn-lg btn-success" @click="playAudio(curAudio)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-play"
-              viewBox="0 0 16 16">
-              <path
-                d="M10.804 8 5 4.633v6.734zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696z">
-              </path>
-            </svg>
-          </button>
-          <button type="button" :class="`btn btn-lg btn-danger ${wrongAudio === null ? 'disabled' : ''}`"
-            @click="playAudio(wrongAudio)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-play"
-              viewBox="0 0 16 16">
-              <path
-                d="M10.804 8 5 4.633v6.734zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696z">
-              </path>
-            </svg>
-          </button>
+        <div class="d-flex justify-content-center mb-3" style="min-height: 70px;">
+          <div v-if="syllables[0].predicted !== null && syllables[1].predicted !== null" class="text-center">
+            <div class="btn-container">
+              <button type="button" class="btn btn-sm btn-outline-success px-2 py-1 me-2" @click="playAudio(curAudio)"
+                aria-label="Play correct answer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                  <path
+                    d="M11.596 8.697l-6.363 3.692A.802.802 0 0 1 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z" />
+                </svg>
+              </button>
+              <span class="h6 text-success d-inline-flex align-items-center mb-0">
+                {{ curGame[curQuestion]["word0"] }}{{ curGame[curQuestion]["tone0"] + 1 }}
+                {{ curGame[curQuestion]["word1"] }}{{ curGame[curQuestion]["tone1"] + 1 }}
+              </span>
+            </div>
+
+            <div
+              v-if="((curGame[curQuestion]['tone0'] !== syllables[0]) && (curGame[curQuestion]['tone1'] !== syllables[1]))"
+              class="btn-container">
+              <button type="button" class="btn btn-sm btn-outline-danger px-2 py-1 me-2" @click="playAudio(wrongAudio)"
+                aria-label="Play incorrect answer">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                  <path
+                    d="M11.596 8.697l-6.363 3.692A.802.802 0 0 1 4 11.692V4.308c0-.653.713-.998 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z" />
+                </svg>
+              </button>
+              <span class="h6 text-danger d-inline-flex align-items-center mb-0">
+                {{ curGame[curQuestion]["word0"] }}{{ syllables[0].predicted + 1 }}
+                {{ curGame[curQuestion]["word1"] }}{{ syllables[1].predicted + 1 }}
+              </span>
+            </div>
+          </div>
+          <div v-else class="d-flex align-items-center justify-content-center">
+            <button type="button" class="btn btn-outline-light" @click="playAudio(curAudio)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+                <path
+                  d="M10.804 8 5 4.633v6.734zm.792-.696a.802.802 0 0 1 0 1.392l-6.363 3.692C4.713 12.69 4 12.345 4 11.692V4.308c0-.653.713-.998 1.233-.696z">
+                </path>
+              </svg>
+            </button>
+          </div>
         </div>
 
         <div class="row mb-4">
@@ -417,8 +439,7 @@ onUnmounted(cleanupAudio)
         </div>
         <div class="d-flex justify-content-center gap-2">
           <button class="btn btn-outline-light" @click="resetQuiz()" style="width: 200px;">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-              class="bi bi-arrow-repeat" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
               <path
                 d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41m-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9" />
               <path fill-rule="evenodd"
@@ -430,8 +451,7 @@ onUnmounted(cleanupAudio)
             :class="`btn btn-outline-light ${(syllables[0].predicted == null) || (syllables[1].predicted == null) || !nextAudio ? 'disabled' : ''}`"
             @click="setNextQuestion()" style="width: 200px;">
             {{ (curQuestion == numExercises - 1) ? 'Finish' : 'Next' }}
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-right"
-              viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
               <path fill-rule="evenodd"
                 d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
             </svg>
@@ -452,7 +472,8 @@ onUnmounted(cleanupAudio)
             <svg width="100" viewBox="0 0 20 20" class="stat-circle">
               <circle cx="10" cy="10" r="8" class="bg"></circle>
               <circle cx="10" cy="10" r="8" class="progress"
-                :style="{ 'stroke-dashoffset': Math.round(-51 - (51 * correctWords / numExercises)) + 'px' }"></circle>
+                :style="{ 'stroke-dashoffset': Math.round(-51 - (51 * correctWords / numExercises)) + 'px' }">
+              </circle>
               <text x="50%" y="55%">{{ Math.round(100 * correctWords / numExercises) }}%</text>
             </svg>
           </div>
@@ -526,14 +547,12 @@ onUnmounted(cleanupAudio)
                 </div>
                 <div>
                   <button type="button" class="btn btn-outline-light" data-bs-dismiss="modal"><svg
-                      xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg"
-                      viewBox="0 0 16 16">
+                      xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                       <path
                         d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
                     </svg> Close</button>
                   <button type="button" class="btn btn-outline-light" @click="copyToClipboard()"><svg
-                      xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-copy"
-                      viewBox="0 0 16 16">
+                      xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                       <path fill-rule="evenodd"
                         d="M4 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 5a1 1 0 0 0-1 1v8a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-1h1v1a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h1v1z" />
                     </svg> Copy</button>
@@ -545,8 +564,7 @@ onUnmounted(cleanupAudio)
 
         <div class="d-flex justify-content-center gap-2">
           <button class="btn btn-outline-light" @click="resetQuiz()" style="width: 200px"><svg
-              xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-repeat"
-              viewBox="0 0 16 16">
+              xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
               <path
                 d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41m-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9" />
               <path fill-rule="evenodd"

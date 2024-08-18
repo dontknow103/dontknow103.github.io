@@ -56,12 +56,6 @@ $offcanvas-box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
   }
 }
 
-.bi {
-  display: inline-block;
-  vertical-align: -0.125em;
-  fill: currentColor;
-}
-
 .form-check-input:checked {
   background-color: rgba(0, 0, 0, 0.175);
   border-color: rgba(0, 0, 0, 0.175);
@@ -84,4 +78,22 @@ $offcanvas-box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175);
 /* Centered text and spinner */
 .loading-overlay .text-center {
   text-align: center;
+}
+
+.btn-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.25rem; /* Adjust this value as needed */
+}
+.btn-container .btn {
+  width: 40px; /* Set a fixed width for the buttons */
+}
+.btn-container span {
+  width: 100px; /* Set a fixed width for the text */
+  text-align: center;
+}
+
+.btn svg {
+  vertical-align: -0.125em;
 }
