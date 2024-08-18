@@ -374,7 +374,7 @@ onUnmounted(cleanupAudio)
 
       <div v-else-if="gameStage === GameStages.STARTED">
 
-        <div class="d-flex justify-content-center mb-3" style="min-height: 70px;">
+        <div class="d-flex justify-content-center mb-3" style="min-height: 75px;">
           <div v-if="syllables[0].predicted !== null && syllables[1].predicted !== null" class="text-center">
             <div class="btn-container">
               <button type="button" class="btn btn-sm btn-outline-success px-2 py-1 me-2" @click="playAudio(curAudio)"
