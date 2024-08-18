@@ -534,7 +534,7 @@ onUnmounted(cleanupAudio)
 
                   Confusion matrices: {{ confusionMatrices }}
                   <br>
-                  Words: {{ curGame.map(obj => `${obj.word0}${obj.tone0} ${obj.word1}${obj.tone1}`) }}
+                  Words: {{ curGame.map(obj => `${obj.word0}${obj.tone0 + 1} ${obj.word1}${obj.tone1 + 1}`) }}
                   <br>
                   Elapsed time by word: {{ elapsedTimeWords }}
                 </template>
