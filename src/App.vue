@@ -416,15 +416,14 @@ onUnmounted(cleanupAudio)
             </button>
           </div>
         </div>
-
         <div class="row mb-4">
-          <div class="col-md-6 mb-3" v-for="(syllable, syllable_num) in syllables" :key="syllable_num">
+          <div class="col-6 mb-3" v-for="(syllable, syllable_num) in syllables" :key="syllable_num">
             <div class="d-flex flex-column align-items-center border rounded p-3">
-              <h6 class="mb-3">Syllable {{ syllable_num + 1 }}</h6>
+              <h6 class="mb-2">Syllable {{ syllable_num + 1 }}</h6>
               <div class="d-flex flex-column align-items-center w-100">
                 <button v-for="(tone, tone_num) in tones[syllable_num]" :key="tone_num"
                   :disabled="!tone || syllable.predicted !== null" :class="[
-                    'btn mb-2 w-75',
+                    'btn mb-2 w-100',
                     {
                       'btn-success': syllable.predicted !== null && curGame[curQuestion][`tone${syllable_num}`] === tone_num,
                       'btn-danger': syllable.predicted === tone_num && curGame[curQuestion][`tone${syllable_num}`] !== tone_num,
