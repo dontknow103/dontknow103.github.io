@@ -376,7 +376,8 @@ onUnmounted(cleanupAudio)
 
         <div class="d-flex justify-content-center mb-3" style="min-height: 75px;">
           <div v-if="syllables[0].predicted !== null && syllables[1].predicted !== null" class="text-center">
-            <div class="btn-container">
+            <div class="btn-container"
+              :class="{ 'p-3': !((curGame[curQuestion]['tone0'] !== syllables[0].predicted) || (curGame[curQuestion]['tone1'] !== syllables[1].predicted)) }">
               <button type="button" class="btn btn-sm btn-outline-success px-2 py-1 me-2" @click="playAudio(curAudio)"
                 aria-label="Play correct answer">
                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
@@ -391,7 +392,7 @@ onUnmounted(cleanupAudio)
             </div>
 
             <div
-              v-if="((curGame[curQuestion]['tone0'] !== syllables[0].predicted) && (curGame[curQuestion]['tone1'] !== syllables[1].predicted))"
+              v-if="((curGame[curQuestion]['tone0'] !== syllables[0].predicted) || (curGame[curQuestion]['tone1'] !== syllables[1].predicted))"
               class="btn-container">
               <button type="button" class="btn btn-sm btn-outline-danger px-2 py-1 me-2" @click="playAudio(wrongAudio)"
                 aria-label="Play incorrect answer">
