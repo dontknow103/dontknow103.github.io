@@ -391,7 +391,7 @@ onUnmounted(cleanupAudio)
             </div>
 
             <div
-              v-if="((curGame[curQuestion]['tone0'] !== syllables[0]) && (curGame[curQuestion]['tone1'] !== syllables[1]))"
+              v-if="((curGame[curQuestion]['tone0'] !== syllables[0].predicted) && (curGame[curQuestion]['tone1'] !== syllables[1].predicted))"
               class="btn-container">
               <button type="button" class="btn btn-sm btn-outline-danger px-2 py-1 me-2" @click="playAudio(wrongAudio)"
                 aria-label="Play incorrect answer">
