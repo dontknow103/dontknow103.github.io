@@ -516,7 +516,8 @@ onUnmounted(cleanupAudio)
                 General<br>
                 --------<br>
                 Number of words: {{ numExercises }}<br>
-                Selected tones: {{ boolToIndex(tones[0]).toString() }} and {{ boolToIndex(tones[1]).toString() }}<br>
+                Selected tones: {{ boolToIndex(tones[0]).map(index => index + 1).toString() }} and {{
+                  boolToIndex(tones[1]).map(index => index + 1).toString() }}<br>
                 Elapsed time: {{ (elapsedTimeQuiz / 60).toFixed(2) }} minutes ({{ (elapsedTimeWords.reduce((a, b) =>
                   (a + b)) /
                   elapsedTimeWords.length).toFixed(2) }} sec/word)<br>
