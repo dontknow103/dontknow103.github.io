@@ -45,7 +45,7 @@ export class ONNXService {
       setTimeout(() => {
         clearInterval(checkModelLoaded);
         reject(new Error("Model loading timed out"));
-      }, 30000);
+      }, 50000);
     });
   }
 
