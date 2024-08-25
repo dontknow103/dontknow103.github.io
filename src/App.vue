@@ -268,7 +268,7 @@ const startQuiz = async () => {
       onnxService = new ONNXService(models[chosenModel.value].fileName);
       await onnxService.initializeSession();
     } catch (error) {
-      modelLoadingText.value = 'Failed to initialize ONNX session';
+      modelLoadingText.value = 'Failed to initialize ONNX session\n' + error;
       return;
     }
   }
@@ -367,7 +367,7 @@ onUnmounted(cleanupAudio)
 
             <div class="spinner-border text-light" role="status">
             </div>
-            <p class="mt-1 text-light">{{ modelLoadingText }}</p>
+            <p class="mt-1 text-light" style="white-space: pre-line;">{{ modelLoadingText }}</p>
           </div>
         </div>
       </div>
